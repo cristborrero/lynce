@@ -53,8 +53,8 @@ const config = {
         critical: 'var(--critical)'
       },
       fontFamily: {
-        sans: ['GeistSans', 'sans-serif'],
-        mono: ['GeistMono', 'monospace'],
+        sans: ['var(--font-geist-sans)', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
       },
       borderRadius: {
         lg: 'var(--radius)',
