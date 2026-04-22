@@ -1,0 +1,200 @@
+@import "geist/font/sans";
+@import "geist/font/mono";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core */
+    --background: #0A0E14;        /* Deep Obsidian */
+    --foreground: #FFFFFF;
+    --accent: #00F5FF;             /* Electric Cyan */
+    --muted: #94A3B8;              /* Steel Mist */
+
+    /* Surfaces */
+    --card: #0D1117;
+    --card-border: #1A2030;
+    --card-hover: #162030;
+
+    /* Semantic */
+    --pass: #00F5FF;               /* Cyan for pass = on-brand */
+    --fail: #FF4444;
+    --warning: #F5A623;
+    --critical: #FF2D55;
+
+    /* Shadcn defaults (adjusted for LYNCE theme) */
+    --popover: #0D1117;
+    --popover-foreground: #FFFFFF;
+    --primary: #00F5FF;
+    --primary-foreground: #0A0E14;
+    --secondary: #1A2030;
+    --secondary-foreground: #FFFFFF;
+    --border: #1A2030;
+    --input: #1A2030;
+    --ring: #00F5FF;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  code, pre, .mono {
+    font-family: var(--font-geist-mono);
+  }
+}
+
+@layer utilities {
+  .hero-glow {
+    background: radial-gradient(circle at 50% -20%, rgba(0, 245, 255, 0.04) 0%, transparent 60%);
+  }
+
+  .hero-headline {
+    @apply text-[32px] md:text-[48px] font-semibold leading-tight text-white uppercase;
+    font-family: var(--font-geist-mono);
+    letter-spacing: 0.12em;
+  }
+
+  .tagline {
+    @apply text-[18px] font-normal text-muted mt-4;
+    font-family: var(--font-geist-sans);
+    letter-spacing: normal;
+  }
+
+  .section-label {
+    @apply text-[11px] font-bold text-accent uppercase font-mono;
+    letter-spacing: 0.2em;
+  }
+
+  .section-headline {
+    @apply text-3xl md:text-4xl font-semibold text-white;
+  }
+
+  .section-body {
+    @apply text-muted text-lg max-w-2xl mx-auto;
+  }
+
+  .card-title {
+    @apply text-lg font-bold text-white;
+  }
+
+  .card-body {
+    @apply text-muted text-sm;
+  }
+
+  .code-text {
+    @apply text-[13px] font-normal text-accent font-mono;
+  }
+
+  .btn-scan-now {
+    @apply bg-accent text-background font-mono font-bold uppercase tracking-[0.2em] px-10 py-4 rounded-md transition-all;
+    box-shadow: 0 4px 14px 0 rgba(0, 245, 255, 0.1);
+  }
+
+  .btn-scan-now:hover {
+    @apply brightness-110 -translate-y-0.5;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+  }
+
+  .scan-btn-pulse {
+    animation: scan-pulse 3s ease-in-out infinite;
+  }
+
+  .status-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .status-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 245, 255, 0.1),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 2s infinite;
+  }
+
+  .status-pulse-red {
+    animation: pulse-red 2s ease-in-out infinite;
+  }
+}
+
+@keyframes scan-pulse {
+  0% { box-shadow: 0 0 0px rgba(0, 245, 255, 0); }
+  50% { box-shadow: 0 0 15px rgba(0, 245, 255, 0.4); }
+  100% { box-shadow: 0 0 0px rgba(0, 245, 255, 0); }
+}
+
+@keyframes pulse-radial {
+  0% { opacity: 0.03; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.08; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 0.03; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse-red {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.hero-pulse {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vw;
+  max-width: 1200px;
+  max-height: 1200px;
+  background: radial-gradient(circle, rgba(0, 245, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: pulse-radial 8s ease-in-out infinite;
+}
+
+.logo {
+  font-family: var(--font-geist-mono);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1em;
+}
+
+.logo-accent {
+  font-size: 14px;
+  color: #00F5FF;
+  margin-right: 12px;
+}
+
+.matrix-background {
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, #00F5FF 1px, transparent 1px);
+  background-size: 30px 30px;
+  mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+  animation: matrix-scroll 20s linear infinite;
+}
+
+@keyframes matrix-scroll {
+  from { background-position: 0 0; }
+  to { background-position: 0 1000px; }
+}
+
+
