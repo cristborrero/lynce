@@ -1,13 +1,16 @@
 FROM python:3.11
 
 # Install system dependencies for WeasyPrint
+# Note: libgdk-pixbuf2.0-0 is replaced by libgdk-pixbuf-xlib-2.0-0 in newer Debian versions
 RUN apt-get update && apt-get install -y \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
     libcairo2 \
-    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf-xlib-2.0-0 \
     libffi-dev \
     shared-mime-info \
+    gir1.2-pango-1.0 \
+    gir1.2-gdkpixbuf-2.0 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
