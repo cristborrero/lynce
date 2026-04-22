@@ -2,9 +2,11 @@ FROM python:3.11-slim
 
 # Install system dependencies for WeasyPrint
 RUN apt-get update && apt-get install -y \
+    build-essential \
     python3-dev \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
+    libcairo2 \
     libgdk-pixbuf2.0-0 \
     libffi-dev \
     shared-mime-info \
@@ -19,8 +21,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Render injects PORT env var
+# Render should be configured to map port 8000
 EXPOSE 8000
 
-# Command to run the application using shell form to expand environment variables
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Standard exec form CMD
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
