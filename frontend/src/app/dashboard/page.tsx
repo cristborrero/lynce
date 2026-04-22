@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Shield, CreditCard, Key, History, Plus } from "lucide-react"
 import { format } from "date-fns"
+import { Navbar } from "@/components/Navbar"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -33,7 +34,9 @@ export default async function DashboardPage() {
   const tier = profile?.tier || "free"
 
   return (
-    <div className="container mx-auto py-10 space-y-8 px-4 max-w-6xl mt-12">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="container mx-auto py-32 space-y-8 px-4 max-w-6xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-white mb-2">Welcome, {user.email?.split('@')[0]}</h1>

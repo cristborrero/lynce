@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2, ArrowRight, ShieldCheck, Lock, Globe, FileKey, XCircle, FileText, CheckCircle2, Crown, AlertTriangle, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { Navbar } from "@/components/Navbar";
 
 interface ResultsUIProps {
   scan: any;
@@ -251,23 +252,7 @@ export function ResultsUI({ scan, findings, user, accessToken, apiUrl }: Results
 
   return (
     <div className="bg-background min-h-screen">
-      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-[#0A0E14]/80 backdrop-blur-[12px] border-b border-white/10" : "bg-transparent border-b border-white/5"
-      }`}>
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-          <Link href="/">
-            <Logo className="text-xl" />
-          </Link>
-          <div className="flex gap-4">
-            <Link 
-              href="/"
-              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-white transition-colors font-mono"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="max-w-5xl mx-auto py-40 px-6 space-y-16">
         {!user && (

@@ -28,6 +28,7 @@ import {
 import { Logo } from "@/components/ui/Logo";
 import { ScanProgress } from "@/components/ScanProgress";
 import { useReducedMotion } from "framer-motion";
+import { Navbar } from "@/components/Navbar";
 
 // Brand logos as SVGs
 const BRAND_LOGOS = [
@@ -145,51 +146,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0A0E14] text-foreground selection:bg-accent selection:text-background font-sans">
       <ScanProgress isOpen={loading} />
       
-      {/* Navbar */}
-      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-[#0A0E14]/80 backdrop-blur-[12px] border-b border-white/10" : "bg-transparent border-b border-transparent"
-      }`}>
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-          <Link href="/">
-            <Logo className="text-xl" />
-          </Link>
-          <nav className="hidden md:flex gap-8 text-[11px] font-medium text-muted uppercase tracking-[0.2em] font-mono">
-            <a href="#features" className="hover:text-accent transition-colors">
-              Features
-            </a>
-            <a
-              href="#how-it-works"
-              className="hover:text-accent transition-colors"
-            >
-              How it works
-            </a>
-            <a href="#pricing" className="hover:text-accent transition-colors">
-              Pricing
-            </a>
-            <a href="#faq" className="hover:text-accent transition-colors">
-              FAQ
-            </a>
-          </nav>
-          <div className="flex gap-4 items-center">
-            {user ? (
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2 text-[11px] font-bold text-background bg-accent hover:brightness-110 px-6 py-2.5 rounded-md transition-all font-mono uppercase tracking-[0.2em]"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </Link>
-            ) : (
-              <Link
-                href="/auth"
-                className="text-[11px] font-medium text-muted hover:text-white transition-colors uppercase tracking-[0.2em] font-mono"
-              >
-                Log in
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+      <Navbar transparent />
 
       <main className="flex flex-col items-center">
         {/* HERO SECTION */}
