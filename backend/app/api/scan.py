@@ -22,9 +22,18 @@ def _get_effective_tier(user, profile: dict) -> str:
     Admin emails always get 'agency'. If no profile exists (empty dict/None),
     fall back to 'agency' for authenticated users (avoids broken onboarding).
     """
-    if user and getattr(user, "email", None) in ADMIN_EMAILS:
+    user_email = getattr(user, "email", None)
+    if not user_email and isinstance(user, dict):
+        user_email = user.get("email")
+    
+    print(f"[DEBUG] _get_effective_tier: user_email={user_email}, ADMIN_EMAILS={ADMIN_EMAILS}")
+    
+    if user_email and user_email in ADMIN_EMAILS:
+        print("[DEBUG] Admin detected! Access granted to agency tier.")
         return "agency"
+        
     tier = profile.get("tier", "free") if profile else "free"
+    print(f"[DEBUG] Tier resolved: {tier}")
     return tier
 
 
@@ -189,14 +198,24 @@ async def get_scan_pdf(scan_id: str, auth: dict = Depends(get_optional_user)):
             detail="PDF reports are a Pro/Agency feature. Please upgrade.",
         )
 
+    user_email = getattr(user, "email", None)
+    if not user_email and isinstance(user, dict):
+        user_email = user.get("email")
+
+    print(f"[DEBUG] get_scan_pdf: user_email={user_email}, scan_id={scan_id}")
+
     supabase = get_supabase()
     # Fetch scan metadata — admin can access any scan
     query = supabase.table("scans").select("*").eq("id", scan_id)
-    if getattr(user, "email", None) not in ADMIN_EMAILS:
+    if user_email not in ADMIN_EMAILS:
+        print(f"[DEBUG] Non-admin access, limiting to user_id={user.id}")
         query = query.eq("user_id", str(user.id))
+    else:
+        print("[DEBUG] Admin access, granting full bypass.")
 
     scan_res = query.execute()
     if not scan_res.data:
+        print(f"[DEBUG] Scan not found for query.")
         raise HTTPException(status_code=404, detail="Scan not found")
 
     # Fetch findings
