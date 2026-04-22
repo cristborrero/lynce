@@ -1,9 +1,7 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 # Install system dependencies for WeasyPrint
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
     libcairo2 \
