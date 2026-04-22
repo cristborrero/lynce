@@ -17,3 +17,4 @@ weasyprint>=61.0
 dnspython>=2.6.1
 python-whois>=0.9.4
 sentry-sdk[fastapi]==2.48.0
+stripe>=5.0.0
