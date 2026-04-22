@@ -155,6 +155,7 @@ export default async function DashboardPage() {
         <h2 className="section-label mb-8">Typography System</h2>
         <TypographyDemo />
       </div>
+      </div>
     </div>
   )
 }
