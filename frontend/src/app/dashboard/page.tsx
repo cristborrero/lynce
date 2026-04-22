@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Shield, CreditCard, Key, History, Plus } from "lucide-react"
 import { format } from "date-fns"
 import { Navbar } from "@/components/Navbar"
+import { TypographyDemo } from "@/components/TypographyDemo"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -149,6 +150,11 @@ export default async function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="pt-8">
+        <h2 className="section-label mb-8">Typography System</h2>
+        <TypographyDemo />
+      </div>
     </div>
   )
 }
