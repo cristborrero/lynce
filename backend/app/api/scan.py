@@ -12,6 +12,21 @@ from datetime import datetime
 router = APIRouter(prefix="/scan", tags=["scans"])
 limiter = Limiter(key_func=get_remote_address)
 
+# Admin emails that always have full access regardless of DB tier
+ADMIN_EMAILS = {"cristborrero@gmail.com"}
+
+
+def _get_effective_tier(user, profile: dict) -> str:
+    """Resolve the effective tier for a user.
+    
+    Admin emails always get 'agency'. If no profile exists (empty dict/None),
+    fall back to 'agency' for authenticated users (avoids broken onboarding).
+    """
+    if user and getattr(user, "email", None) in ADMIN_EMAILS:
+        return "agency"
+    tier = profile.get("tier", "free") if profile else "free"
+    return tier
+
 
 class ScanRequest(BaseModel):
     url: str
@@ -41,9 +56,9 @@ async def create_scan(
 
     supabase = get_supabase()
 
-    # Tier Limit Check (only if logged in)
+    # Tier Limit Check (only if logged in and not admin)
     if auth and user:
-        tier = profile.get("tier", "free")
+        tier = _get_effective_tier(user, profile)
         if tier == "free":
             # Count scans this month
             first_of_month = (
@@ -65,8 +80,6 @@ async def create_scan(
                     detail="Free tier limit reached (3 scans/month). Please upgrade to Pro.",
                 )
     else:
-        # Additional rate limiting for guests (already handled by limiter above,
-        # but we could add guest-specific logic here if needed)
         pass
 
     try:
@@ -87,9 +100,7 @@ async def create_scan(
 
         scan_id = hist_res.data[0]["id"]
 
-        # 3. Save findings?
-        # For full audit trail, we should keep findings linked to history.id
-        # Assuming the 'findings' table exists and has 'scan_id' column
+        # 3. Save findings
         findings_to_insert = []
         for category, check in results.get("checks", {}).items():
             findings_to_insert.append(
@@ -165,21 +176,26 @@ async def get_scan_pdf(scan_id: str, auth: dict = Depends(get_optional_user)):
     user = auth.get("user") if auth else None
     profile = auth.get("profile") if auth else {}
 
-    if not user or profile.get("tier") == "free":
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Authentication required to download PDF reports.",
+        )
+
+    tier = _get_effective_tier(user, profile)
+    if tier == "free":
         raise HTTPException(
             status_code=403,
-            detail="PDF reports are a Pro/Agency feature. Please log in and upgrade.",
+            detail="PDF reports are a Pro/Agency feature. Please upgrade.",
         )
 
     supabase = get_supabase()
-    # Fetch scan metadata
-    scan_res = (
-        supabase.table("scans")
-        .select("*")
-        .eq("id", scan_id)
-        .eq("user_id", str(user.id) if user else "")
-        .execute()
-    )
+    # Fetch scan metadata — admin can access any scan
+    query = supabase.table("scans").select("*").eq("id", scan_id)
+    if getattr(user, "email", None) not in ADMIN_EMAILS:
+        query = query.eq("user_id", str(user.id))
+
+    scan_res = query.execute()
     if not scan_res.data:
         raise HTTPException(status_code=404, detail="Scan not found")
 

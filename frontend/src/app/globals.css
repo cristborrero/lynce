@@ -1,5 +1,4 @@
-@import "geist/font/sans";
-@import "geist/font/mono";
+/* Geist fonts are loaded via layout.tsx (Next.js font API) — no CSS import needed */
 
 @tailwind base;
 @tailwind components;
@@ -44,6 +43,7 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: var(--font-geist-sans), 'Inter', system-ui, -apple-system, sans-serif;
   }
   code, pre, .mono {
     font-family: var(--font-geist-mono);
